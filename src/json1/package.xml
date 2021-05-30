@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>json1</name>
+  <version>1.0.0</version>
+  <description>json example</description>
+
+  <license>BSD</license>
+  <maintainer email="1104881327@qq.com">Maximilian Naumann</maintainer>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>mrt_cmake_modules</build_depend> 	
+  <!-- 将mrt_cmake_modules 包放在workspace中，不然无法通过编译  -->
+  <build_depend>message_generation</build_depend>
+  <exec_depend>message_runtime</exec_depend>
+  <test_depend>gtest</test_depend>
+  <test_depend>rostest</test_depend>
+
+  <build_depend>roscpp</build_depend>
+  <!-- <build_depend>rospy</build_depend> Use this instead of roscpp  when writing a python node -->
+  <depend>roslib</depend>
+
+  <depend>nodelet</depend>
+
+  <depend>rviz</depend>
+  <depend>boost</depend>
+
+
+
+
+</package>
