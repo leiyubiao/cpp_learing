@@ -15,7 +15,8 @@
 由于我所有的版本我都要需要，所以要下载第一个 probobuf-all...
 下载后直接解压，如果没有进行解压则下载相应的解压软件。
 
-###　2.安装
+### 2.安装
+
 [可借鉴的教程](https://blog.csdn.net/tropicofcancer9/article/details/96306797?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-3.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-3.control)
 以下的每一步都是必须要做的,如果没有权限则加上sudo 
 而有些教程上的 ./autogen.sh　这部是用另外一个方法进行获取的资源，目的也是生成　 configure.sh　文件。
