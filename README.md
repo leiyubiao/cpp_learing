@@ -56,3 +56,6 @@ cd <到你make install 的文件夹下>
 make uninstall　#　这个时候应该就可以，再用　whereis protoc 验证下即可，正常只有ubuntu　自还的protoc　版本了。
 ~~~
 
+### 4. 使用教程
+#### 4.1 cpp　使用教程
+[1.　基础教程](https://www.cnblogs.com/DswCnblog/p/6700660.html)
