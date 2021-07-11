@@ -59,3 +59,4 @@ make uninstall　#　这个时候应该就可以，再用　whereis protoc 验�
 ### 4. 使用教程
 #### 4.1 cpp　使用教程
 [1.　基础教程](https://www.cnblogs.com/DswCnblog/p/6700660.html)
+[2. 编译教程](https://blog.csdn.net/m0_37542524/article/details/94905775?utm_medium=distribute.wap_relevant.none-task-blog-baidujs_title-0)
