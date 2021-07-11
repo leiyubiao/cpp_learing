@@ -60,3 +60,140 @@ make uninstall　#　这个时候应该就可以，再用　whereis protoc 验�
 #### 4.1 cpp　使用教程
 [1.　基础教程](https://www.cnblogs.com/DswCnblog/p/6700660.html)
 [2. 编译教程](https://blog.csdn.net/m0_37542524/article/details/94905775?utm_medium=distribute.wap_relevant.none-task-blog-baidujs_title-0)
+
+~~~cpp
+// game.proto
+
+syntax = "proto3";
+package pt;
+//option optimize_for = LIFE_RUNTIME;
+
+message req_login
+{
+    string username = 1;
+    string password = 2;
+
+}
+
+message obj_user_info
+{
+    string nickname = 1; //　昵称
+    string icon = 2; //　头像
+    int64 coin = 3; //　金币
+    string location = 4; //　所属地
+}
+
+//　游戏数据统计
+message obj_user_game_record
+{
+    string time = 1;
+    int32 kill = 2; // 杀死别人的人头数
+    int32 dead = 3; //　死亡数。
+    int32 assist = 4; //　助攻数
+}
+
+message rsp_login
+{
+    enum LIFE_RUNTIME{
+        SUCCESS = 0; 
+        ACCOUNT_NULL = 1; //　账号不存在
+        ACCOUNT_LOCK = 2; // 账号锁定
+        PASSWORD_ERROR = 3; //　密码错误
+        ERROR = 10;
+    }
+
+    int32 ret = 1;
+    obj_user_info  user_info = 2;
+    repeated obj_user_game_record record = 3; //　repeated 关键字是数组的意思。
+}
+~~~
+
+~~~cpp
+// main.cpp
+#include <iostream>
+#include <string>
+#include "game.pb.h"
+
+int main()
+{
+    pt::rsp_login rsp{};
+    rsp.set_ret(pt::rsp_login_LIFE_RUNTIME_SUCCESS);
+    auto user_info = rsp.mutable_user_info();　//　返回一个指针，指向user_info
+    user_info->set_nickname("dsw"); //　set_"name"() 写　的方式
+    user_info->set_icon("345DS55GF34D774S");
+    user_info->set_coin(2000);
+    user_info->set_location("zh");
+
+
+    for (int i = 0; i < 5; i++) {
+        auto record = rsp.add_record();　//　record　是repeated数组，先使用add 实例化。
+        record->set_time("2017/4/13 12:22:11");　// 接下来再set
+        record->set_kill(i * 4);
+        record->set_dead(i * 2);
+        record->set_assist(i * 5);
+                
+    }
+
+    std::string buff{};
+    rsp.SerializeToString(&buff); //　可能是因为数据结构比较大
+    //使用　& 的方法进行使用。 proto 序列化为string。
+
+    //------------------解析----------------------
+    pt::rsp_login rsp2{};
+    if (!rsp2.ParseFromString(buff)) {　//　从string　反序列化为　proto　数据类型。
+        std::cout << "parse error\n";
+    }
+    
+    auto temp_user_info = rsp2.user_info();
+    std::cout << "nickname:" << temp_user_info.nickname() << std::endl;
+    std::cout << "coin:" << temp_user_info.coin() << std::endl;
+    for (int m = 0; m < rsp2.record_size(); m++) {
+        auto temp_record = rsp2.record(m);  //　record是数组，读取数组每m个位置用()
+        // 来读取。
+        std::cout << "time:" << temp_record.time() << " kill:" << temp_record.kill() << " dead:" << temp_record.dead() << " assist:" << temp_record.assist() << std::endl;
+    }
+}
+~~~
+
+~~~cmake
+cmake_minimum_required(VERSION 3.0.2)
+project(protoc_tutorial)
+
+add_compile_options(-std=c++11)
+
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  rospy
+  std_msgs
+)
+
+set(proto_dir ${PROJECT_SOURCE_DIR}/proto)
+file(GLOB  proto_files ${PROJECT_SOURCE_DIR}/proto/game.proto
+
+ )
+message(STATUS "Proto Source Dir: ${proto_dir}")
+message(STATUS "Proto Source Files: ${proto_files}")
+
+#Find required protobuf package
+find_package(Protobuf REQUIRED)
+if(PROTOBUF_FOUND)
+    message(STATUS "protobuf library found")
+else()
+    message(FATAL_ERROR "protobuf library is needed but cant not be found")
+endif()
+
+set(PROTO_SRCS ${PROJECT_SOURCE_DIR}/proto/)
+set(PROTO_HDRS ${PROJECT_SOURCE_DIR}/proto/)
+message(STATUS "proto src ${PROTO_SRCS}")
+include_directories(${PROTOBUF_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
+PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS ${proto_files})
+
+include_directories(
+   ＃include
+  ${catkin_INCLUDE_DIRS}
+)
+
+add_executable(cppTest src/main.cpp ${PROTO_SRCS} ${PROTO_HDRS})
+target_link_libraries(cppTest ${PROTOBUF_LIBRARIES})
+~~~
