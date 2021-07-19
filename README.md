@@ -197,3 +197,45 @@ include_directories(
 add_executable(cppTest src/main.cpp ${PROTO_SRCS} ${PROTO_HDRS})
 target_link_libraries(cppTest ${PROTOBUF_LIBRARIES})
 ~~~
+
+
+## python　调用 C++ .SO　文件
+~~~cpp
+#include <stdio.h>
+ 
+typedef struct TestDLL_
+{
+	int a;
+	//char *b;
+} testdll;
+ 
+int test(testdll t)
+{
+	t.a=t.a+t.a;
+	printf("%d\n",t.a);
+	return t.a;
+}
+
+extern "C" {
+	int Test (testdll t) {
+		int result = test(t);
+		return result;
+	}
+}
+~~~
+
+~~~python
+from ctypes import  *
+
+ll = cdll.LoadLibrary('./libmy.so')
+
+class pyStruct(Structure):
+    _fields_ = [
+        ("a", c_int)
+    ]
+data = pyStruct()
+data.a = 1
+
+result = ll.Test(data)
+print(result)
+~~~
