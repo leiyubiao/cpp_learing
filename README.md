@@ -239,3 +239,4 @@ data.a = 1
 result = ll.Test(data)
 print(result)
 ~~~
+[python 调用 c++ 的好文](https://cloud.tencent.com/developer/article/1148454)
